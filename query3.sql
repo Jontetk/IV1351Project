@@ -1,5 +1,7 @@
 SET SEARCH_PATH = seminar;
 
+--Change the date on the computer to for example 2022-06-01 to get more data
+--could also change the CURRENT_DATE to that date to get the data
 
 SELECT stat.instructor_id, first_name, last_name, "count" as lesson_count
 FROM 
