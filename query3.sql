@@ -1,7 +1,8 @@
 SET SEARCH_PATH = seminar;
 
---Change the date on the computer to for example 2022-06-01 to get more data
---could also change the CURRENT_DATE to that date to get the data
+--Change the date on the computer to for example 2023-03-30 to get data other months could also work
+--Could also change the CURRENT_DATE to that date to get the data
+--Multiple instructors can go to multiple lessons
 
 SELECT stat.instructor_id, first_name, last_name, "count" as lesson_count
 FROM 
@@ -36,3 +37,5 @@ GROUP by instructor_id) as "stat"
 
 JOIN instructor as inst
 ON stat.instructor_id = inst.instructor_id
+
+WHERE count > 1
