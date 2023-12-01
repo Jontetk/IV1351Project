@@ -535,6 +535,9 @@ insert into ensamble (lesson_description, min_student_allowed, max_student_allow
 insert into ensamble (lesson_description, min_student_allowed, max_student_allowed, time_start, time_end, lesson_date, genre, class_room_id, lesson_type, skill_level, price_set_date) values ('dapibus nulla suscipit ligula in lacus curabitur at ipsum ac tellus', 2, 56, '0:00', '12:09', '2021-02-26', 'pop', 5, 'ensamble', 'intermediate', '2022-07-28');
 insert into ensamble (lesson_description, min_student_allowed, max_student_allowed, time_start, time_end, lesson_date, genre, class_room_id, lesson_type, skill_level, price_set_date) values ('non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum primis', 6, 33, '0:00', '12:25', '2022-06-06', 'rock', 9, 'ensamble', 'advanced', '2020-10-21');
 insert into ensamble (lesson_description, min_student_allowed, max_student_allowed, time_start, time_end, lesson_date, genre, class_room_id, lesson_type, skill_level, price_set_date) values ('at nunc commodo placerat praesent blandit nam nulla integer pede justo lacinia eget tincidunt', 8, 44, '0:00', '12:43', '2022-02-05', 'jazz', 4, 'ensamble', 'intermediate', '2022-07-28');
+insert into ensamble (lesson_description, min_student_allowed, max_student_allowed, time_start, time_end, lesson_date, genre, class_room_id, lesson_type, skill_level, price_set_date) values ('less one', 1, 5, '10:00', '13:00', '2023-12-04', 'Eurobeat', 5, 'ensamble', 'intermediate', '2022-07-28');
+insert into ensamble (lesson_description, min_student_allowed, max_student_allowed, time_start, time_end, lesson_date, genre, class_room_id, lesson_type, skill_level, price_set_date) values ('less two', 1, 10, '13:00', '16:00', '2023-12-05', 'Jazz', 4, 'ensamble', 'beginner', '2022-07-25');
+insert into ensamble (lesson_description, min_student_allowed, max_student_allowed, time_start, time_end, lesson_date, genre, class_room_id, lesson_type, skill_level, price_set_date) values ('less thr', 1, 4, '22:00', '24:00', '2023-12-09', 'Eurobeat', 5, 'ensamble', 'advanced', '2020-10-21');
 
 insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('bass guitar', 9);
 insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('cello', 2);
@@ -555,6 +558,12 @@ insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('sax
 insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('violin', 8);
 insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('saxophone', 4);
 insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('guitar', 8);
+insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('guitar', 13);
+insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('piano', 13);
+insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('guitar', 12);
+insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('piano', 12);
+insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('guitar', 11);
+insert into ensamble_instrument_type (instrument_type, ensamble_id) values ('piano', 11);
 
 insert into ensamble_taken (ensamble_id, student_id) values (9, 20);
 insert into ensamble_taken (ensamble_id, student_id) values (10, 14);
@@ -576,6 +585,22 @@ insert into ensamble_taken (ensamble_id, student_id) values (2, 18);
 insert into ensamble_taken (ensamble_id, student_id) values (4, 16);
 insert into ensamble_taken (ensamble_id, student_id) values (9, 4);
 insert into ensamble_taken (ensamble_id, student_id) values (9, 5);
+insert into ensamble_taken (ensamble_id, student_id) values (11, 7);
+insert into ensamble_taken (ensamble_id, student_id) values (11, 12);
+insert into ensamble_taken (ensamble_id, student_id) values (11, 9);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 8);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 11);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 14);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 6);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 13);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 10);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 5);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 15);
+insert into ensamble_taken (ensamble_id, student_id) values (12, 7);
+insert into ensamble_taken (ensamble_id, student_id) values (13, 9);
+insert into ensamble_taken (ensamble_id, student_id) values (13, 14);
+insert into ensamble_taken (ensamble_id, student_id) values (13, 10);
+insert into ensamble_taken (ensamble_id, student_id) values (13, 12);
 
 insert into ensamble_instructed (ensamble_id, instructor_id) values (5, 6);
 insert into ensamble_instructed (ensamble_id, instructor_id) values (3, 6);
@@ -596,3 +621,6 @@ insert into ensamble_instructed (ensamble_id, instructor_id) values (1, 2);
 insert into ensamble_instructed (ensamble_id, instructor_id) values (1, 1);
 insert into ensamble_instructed (ensamble_id, instructor_id) values (6, 4);
 insert into ensamble_instructed (ensamble_id, instructor_id) values (5, 3);
+insert into ensamble_instructed (ensamble_id, instructor_id) values (11, 8);
+insert into ensamble_instructed (ensamble_id, instructor_id) values (12, 3);
+insert into ensamble_instructed (ensamble_id, instructor_id) values (13, 8);
