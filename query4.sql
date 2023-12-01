@@ -1,3 +1,6 @@
+
+--good example ensambles exists for the week starting 2023-12-04
+
 drop view if exists lessons_this_week;
 create temporary view lessons_this_week as 
 select * from ensamble where date_trunc('week',lesson_date) = date_trunc('week',Current_date+7);
