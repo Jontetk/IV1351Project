@@ -56,11 +56,13 @@ ON lt.student_id = sm.st_id
 GROUP BY il.lesson_type,instrument_type, price
 );
 
-
-
-
-	AS SELECT lesson_type,genre, null AS instrument_type ,price, name_mail FROM ensamble_info
+	CREATE OR REPLACE FUNCTION todays_data() RETURNS void AS $$
+	BEGIN
+  	EXECUTE'CREATE TABLE lesson_data_'||to_char(CURRENT_TIMESTAMP, 'YYYY_MM_DD_HH24_MI_SS')||' AS SELECT lesson_type,genre, null AS instrument_type ,price, name_mail FROM ensamble_info
 	UNION ALL
 	SELECT lesson_type,null AS genre, instrument_type, price, name_mail FROM group_lesson_info
 	UNION ALL
-	SELECT lesson_type,null AS genre, instrument_type, price, name_mail FROM individual_lesson_info;
+	SELECT lesson_type,null AS genre, instrument_type, price, name_mail FROM individual_lesson_info';
+END;
+$$ LANGUAGE plpgsql;
+SELECT todays_data();
