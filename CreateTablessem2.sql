@@ -31,15 +31,32 @@ CREATE TABLE student(
 	city VARCHAR(100),
 	street_adress VARCHAR(100),
     enrollment_date DATE NOT NULL,
-    rental_id INT,
-	rental_id_2 INT,
-	PRIMARY KEY (student_id),
-	FOREIGN KEY(rental_id) REFERENCES rental(rental_id) ON DELETE SET NULL,
-	FOREIGN KEY(rental_id_2) REFERENCES rental(rental_id) ON DELETE SET NULL
+	PRIMARY KEY (student_id)
 
 	
 
 );
+
+CREATE TABLE students_renting(
+	rental_id INT NOT NULL,
+	student_id INT NOT NULL,
+	UNIQUE(rental_id,student_id),
+	FOREIGN KEY(rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE,
+	FOREIGN KEY(student_id) REFERENCES student(student_id) ON DELETE CASCADE
+
+);
+
+CREATE TABLE max_rental_per_student(
+	max_rental_id INT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	max_rental INT,
+	set_date DATE,
+	PRIMARY KEY(max_rental_id)
+);
+
+
+
+
+
 CREATE TABLE phone_number_student(
 	phone_number VARCHAR(20) NOT NULL,
 	student_id INT NOT NULL,

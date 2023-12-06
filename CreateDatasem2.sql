@@ -37,26 +37,56 @@ insert into rental ( start_date, end_date, instrument_id) values ( '2021-01-31',
 insert into rental ( start_date, end_date, instrument_id) values ( '2021-11-17', '2023-03-23', 10);
 insert into rental ( start_date, end_date, instrument_id) values ( '2021-07-30', null, 17);
 
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('78836316-2460', 'Teressa', 'Fidelus', '2017/10/28', 6, 15, '46157', 'Bulgan', '34933 Monterey Plaza');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('65990487-5909', 'Curcio', 'Gounin', '2007/12/31', 6, 5, '58761', 'Carangola', '23 Rigney Place');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('72302543-1294', 'Winfield', 'Windaybank', '2021/06/21', 4, null, '69154', 'Boyeros', '8576 Vidon Road');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('11993379-9942', 'Corella', 'Baumford', '2015/12/24', null, null, '11529', 'Badajoz', '0786 Gulseth Hill');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('99784815-6795', 'Corbin', 'Polly', '2005/12/23', 8, null, '63188', 'Acacías', '55466 4th Drive');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('73085945-1683', 'Fredek', 'Maffy', '2007/02/03', 2, 1, '29620', 'Frederiksberg', '74 Pawling Avenue');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('26206394-6321', 'Hurlee', 'Hounsham', '2005/04/24', null, 5, '05638', 'Latung', '80891 Anhalt Park');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('43040860-5972', 'Marc', 'Hartin', '2010/10/08', 14, 14, '95308', 'Bataiporã', '92 Pierstorff Plaza');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('02771476-6875', 'Whittaker', 'Fussen', '2020/02/17', 10, 4, '15015', 'Gozdowo', '9604 Maple Junction');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('21298215-3673', 'Yolane', 'Simmank', '2000/11/29', 2, 4, '22627', 'Kotlovka', '14 Lillian Pass');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('32746873-3527', 'Gayle', 'Mountjoy', '2016/02/28', 7, null, '45714', 'Angers', '09 Sachs Lane');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('13666424-8416', 'Antonella', 'Vaszoly', '2021/08/05', 12, 14, '60313', 'Mohelno', '37 Cascade Hill');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('17817711-3347', 'Dud', 'Giovanardi', '2007/02/19', 13, 8, '99374', 'Jiangchuan', '3433 John Wall Drive');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('10233233-5060', 'Jenifer', 'Dearlove', '2009/07/10', null, 2, '79829', 'Zhifang', '1524 Bunting Alley');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('01172686-0730', 'Margaretha', 'Tulleth', '2019/10/17', null, null, '49087', 'Padina', '118 Mendota Way');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('25333057-3822', 'Allis', 'Vermer', '2021/09/13', 2, null, '55458', 'Shingū', '1 Transport Trail');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('75283233-9940', 'Ciro', 'Wealthall', '2007/08/13', 8, 13, '76358', 'Kolindrós', '7276 Lotheville Alley');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('28451621-4935', 'Freemon', 'Knowles', '2020/09/17', 6, null, '38275', 'Cajabamba', '4 Longview Parkway');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('93788143-1267', 'Vergil', 'Straine', '2007/12/05', 15, null, '44393', 'Dallas', '61 Warbler Plaza');
-insert into student (person_number, first_name, last_name, enrollment_date, rental_id, rental_id_2, zip, city, street_adress) values ('75315355-3543', 'Stanly', 'Collopy', '2018/01/04', 2, 2, '67035', 'Wangping', '56 Hudson Alley');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('78836316-2460', 'Teressa', 'Fidelus', '2017/10/28', '46157', 'Bulgan', '34933 Monterey Plaza');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('65990487-5909', 'Curcio', 'Gounin', '2007/12/31', '58761', 'Carangola', '23 Rigney Place');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('72302543-1294', 'Winfield', 'Windaybank', '2021/06/21', '69154', 'Boyeros', '8576 Vidon Road');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('11993379-9942', 'Corella', 'Baumford', '2015/12/24', '11529', 'Badajoz', '0786 Gulseth Hill');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('99784815-6795', 'Corbin', 'Polly', '2005/12/23', '63188', 'Acacías', '55466 4th Drive');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('73085945-1683', 'Fredek', 'Maffy', '2007/02/03', '29620', 'Frederiksberg', '74 Pawling Avenue');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('26206394-6321', 'Hurlee', 'Hounsham', '2005/04/24', '05638', 'Latung', '80891 Anhalt Park');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('43040860-5972', 'Marc', 'Hartin', '2010/10/08', '95308', 'Bataiporã', '92 Pierstorff Plaza');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('02771476-6875', 'Whittaker', 'Fussen', '2020/02/17', '15015', 'Gozdowo', '9604 Maple Junction');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('21298215-3673', 'Yolane', 'Simmank', '2000/11/29', '22627', 'Kotlovka', '14 Lillian Pass');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('32746873-3527', 'Gayle', 'Mountjoy', '2016/02/28', '45714', 'Angers', '09 Sachs Lane');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('13666424-8416', 'Antonella', 'Vaszoly', '2021/08/05', '60313', 'Mohelno', '37 Cascade Hill');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('17817711-3347', 'Dud', 'Giovanardi', '2007/02/19', '99374', 'Jiangchuan', '3433 John Wall Drive');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('10233233-5060', 'Jenifer', 'Dearlove', '2009/07/10', '79829', 'Zhifang', '1524 Bunting Alley');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('01172686-0730', 'Margaretha', 'Tulleth', '2019/10/17', '49087', 'Padina', '118 Mendota Way');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('25333057-3822', 'Allis', 'Vermer', '2021/09/13', '55458', 'Shingū', '1 Transport Trail');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('75283233-9940', 'Ciro', 'Wealthall', '2007/08/13', '76358', 'Kolindrós', '7276 Lotheville Alley');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('28451621-4935', 'Freemon', 'Knowles', '2020/09/17', '38275', 'Cajabamba', '4 Longview Parkway');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('93788143-1267', 'Vergil', 'Straine', '2007/12/05', '44393', 'Dallas', '61 Warbler Plaza');
+insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('75315355-3543', 'Stanly', 'Collopy', '2018/01/04', '67035', 'Wangping', '56 Hudson Alley');
+
+insert into students_renting(rental_id,student_id) values(6,1);
+insert into students_renting(rental_id,student_id) values(15,1);
+insert into students_renting(rental_id,student_id) values(5,2);
+insert into students_renting(rental_id,student_id) values(4,3);
+insert into students_renting(rental_id,student_id) values(8,5);
+insert into students_renting(rental_id,student_id) values(1,6);
+insert into students_renting(rental_id,student_id) values(2,6);
+insert into students_renting(rental_id,student_id) values(14,7);
+insert into students_renting(rental_id,student_id) values(10,8);
+insert into students_renting(rental_id,student_id) values(4,8);
+insert into students_renting(rental_id,student_id) values(7,9);
+insert into students_renting(rental_id,student_id) values(3,10);
+insert into students_renting(rental_id,student_id) values(9,11);
+insert into students_renting(rental_id,student_id) values(11,12);
+insert into students_renting(rental_id,student_id) values(12,13);
+insert into students_renting(rental_id,student_id) values(13,14);
+
+
+insert into max_rental_per_student(max_rental,set_date) values(2,'1999-12-31');
+
+
+
+
+
+
+
+
+
+
 
 insert into phone_number_student (student_id, phone_number) values (18, '+62 133 923 0337');
 insert into phone_number_student (student_id, phone_number) values (18, '+62 845 434 4912');
