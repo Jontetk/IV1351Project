@@ -1,11 +1,4 @@
-Create or replace temporary view rented as
-select i.instrument_id from instrument as i
-join rental as r
-on r.instrument_id = i.instrument_id
-where end_date is null;
-
-
-select i.instrument_id,brand,instrument_type,instrument_code,rental_fee from instrument as i
-full join rented as r
-on i.instrument_id = r.instrument_id
-where r.instrument_id is null;
+SELECT i.instrument_id, i.brand, i.instrument_type, i.instrument_code, i.rental_fee
+FROM instrument AS i
+LEFT JOIN rental AS r ON i.instrument_id = r.instrument_id AND r.end_date IS NULL
+WHERE r.instrument_id IS NULL OR (r.instrument_id IS NOT NULL AND r.end_date IS NOT NULL);

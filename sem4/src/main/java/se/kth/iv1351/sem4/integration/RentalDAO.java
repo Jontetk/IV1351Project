@@ -26,20 +26,19 @@ public class RentalDAO {
     public RentalDAO() throws RentalDBException {
         try {
             connectToRentalDB();
-            // TODO add prepareStatements initializaiton 
+            prepareStatements();
         } catch (ClassNotFoundException | SQLException exception) {
             throw new RentalDBException("Could not connect to datasource.", exception);
         }
     }
 
     private void prepareStatements() throws SQLException {
-        findAvalibleInstruments = connection.prepareStatement("CREATE OR REPLACE TEMPORARY VIEW rented AS "
-        +"SELECT i."+INSTRUMENT_ID+" FROM instrument AS i "
-        +"JOIN rental AS r  ON r."+INSTRUMENT_ID+" = i."+INSTRUMENT_ID+" WHERE end_date IS NULL; "
-        +"SELECT i."+INSTRUMENT_ID+","+BRAND+","+TYPE+","+CODE+",rental_fee FROM instrument AS i "
-        +"FULL JOIN rented AS r "
-        +"ON i."+INSTRUMENT_ID+" = r."+INSTRUMENT_ID+" "
-        +"WHERE r."+INSTRUMENT_ID+" IS NULL;");
+        findAvalibleInstruments = connection.prepareStatement("SELECT i."+INSTRUMENT_ID+", i."+BRAND+", i."+TYPE+", i."+CODE+", i."+RENT_FEE+" "
+        +"FROM seminar.instrument AS i "
+        +"LEFT JOIN seminar.rental AS r ON i."+INSTRUMENT_ID+" = r."+INSTRUMENT_ID+" AND r.end_date IS NULL "
+        +"WHERE r."+INSTRUMENT_ID+" IS NULL OR (r."+INSTRUMENT_ID+" IS NOT NULL AND r.end_date IS NOT NULL);");
+        
+
     }
 
     public ArrayList<InstrumentDTO> findAvaInstruments() throws RentalDBException{
@@ -115,13 +114,6 @@ public class RentalDAO {
     }
 
 
-    public static void main(String[] args) {
-        try {
-               new RentalDAO();
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
-     
-    }
+
 }
 
