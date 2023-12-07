@@ -31,5 +31,17 @@ public class InstrumentDTO {
         this.rentalFee = rentalFee;
     }
     
-    
+    @Override
+    public String toString(){
+        StringBuilder stringRepresentation = new StringBuilder();
+        stringRepresentation.append("Instrument: [");
+        stringRepresentation.append("instrumentId: "+this.instrumentId);
+        stringRepresentation.append("brand: "+this.brand);
+        stringRepresentation.append("type: "+this.type);
+        stringRepresentation.append("code: "+this.code);
+        stringRepresentation.append("fee per month: " +this.rentalFee);
+        stringRepresentation.append("]");
+
+        return stringRepresentation.toString();
+    }
 }
