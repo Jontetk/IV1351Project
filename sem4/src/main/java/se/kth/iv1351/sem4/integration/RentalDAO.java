@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 
 
@@ -16,36 +17,47 @@ import se.kth.iv1351.sem4.model.InstrumentDTO;
 
 public class RentalDAO {
     private Connection connection;
-    private PreparedStatement findAvalibleInstruments;
+    private PreparedStatement findAllInstruments;
+    private PreparedStatement findAllRentals;
+    
     public static final String INSTRUMENT_ID = "instrument_id";
     public static final String BRAND = "brand";
     public static final String TYPE = "instrument_type";
     public static final String CODE = "instrument_code";
     public static final String RENT_FEE = "rental_fee";
+    public static final String RENT_ID = "rental_id";
+    public static final String S_DATE = "start_date";
+    public static final String E_DATE = "end_date";
+
+
+
+
+
     
     public RentalDAO() throws RentalDBException {
         try {
             connectToRentalDB();
             prepareStatements();
-        } catch (ClassNotFoundException | SQLException exception) {
+        } catch ( SQLException exception) {
             throw new RentalDBException("Could not connect to datasource.", exception);
         }
     }
 
     private void prepareStatements() throws SQLException {
-        findAvalibleInstruments = connection.prepareStatement("SELECT i."+INSTRUMENT_ID+", i."+BRAND+", i."+TYPE+", i."+CODE+", i."+RENT_FEE+" "
-        +"FROM seminar.instrument AS i "
-        +"LEFT JOIN seminar.rental AS r ON i."+INSTRUMENT_ID+" = r."+INSTRUMENT_ID+" AND r.end_date IS NULL "
-        +"WHERE r."+INSTRUMENT_ID+" IS NULL OR (r."+INSTRUMENT_ID+" IS NOT NULL AND r.end_date IS NOT NULL);");
-        
-
+        findAllInstruments = connection.prepareStatement("SELECT "+INSTRUMENT_ID+", "+BRAND+", "+TYPE+", "+CODE+", "+RENT_FEE+" "
+        +"FROM seminar.instrument;");
+        findAllRentals = connection.prepareStatement("select "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+ " "
+        +"FROM seminar.rental");
     }
 
-    public ArrayList<InstrumentDTO> findAvaInstruments() throws RentalDBException{
+
+
+
+    public ArrayList<InstrumentDTO> getAllInstruments() throws RentalDBException{
         ArrayList<InstrumentDTO> allInstruments = new ArrayList<>();
         
         try {
-            ResultSet result = findAvalibleInstruments.executeQuery();
+            ResultSet result = findAllInstruments.executeQuery();
             {
                 while (result.next()) {
                         allInstruments.add(
@@ -55,11 +67,11 @@ public class RentalDAO {
                             result.getString(TYPE),
                             result.getString(CODE),
                             result.getFloat(RENT_FEE)
-                            ));
-            }
-                    
+                            ));}
+                    connection.commit();
                 }
             }
+            
           catch (SQLException e) {
             throw new RentalDBException("Error could not get data. Reason: ", e);
         }
@@ -67,10 +79,16 @@ public class RentalDAO {
         return allInstruments;
 
     }
+    public ArrayList<RentalDTO> getAllRentals() throws RentalDBException{
+
+
+    }
+
+
 
     
 
-    private void connectToRentalDB() throws ClassNotFoundException, SQLException {
+    private void connectToRentalDB() throws SQLException {
         connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sem",
                 "postgres", "post");
 
