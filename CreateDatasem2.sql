@@ -21,21 +21,6 @@ insert into instrument (brand, instrument_type, instrument_code, rental_fee) val
 insert into instrument (brand, instrument_type, instrument_code, rental_fee) values ( 'Gibson', 'cello', 'EJJQahs9Sp', 59.54);
 insert into instrument (brand, instrument_type, instrument_code, rental_fee) values ( 'PRS', 'bass guitar', 'Eh39aDzpST', 60.72);
 
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-04-02', '2023-04-26', 8);
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-11-11', '2023-02-07', 14);
-insert into rental ( start_date, end_date, instrument_id) values ( '2022-01-19', '2023-01-07', 3);
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-01-13', '2023-07-30', 6);
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-12-16', '2023-10-23', 6);
-insert into rental ( start_date, end_date, instrument_id) values ( '2022-05-25', '2023-01-08', 18);
-insert into rental ( start_date, end_date, instrument_id) values ( '2022-04-14', '2023-08-08', 8);
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-08-03', '2023-03-25', 20);
-insert into rental ( start_date, end_date, instrument_id) values ('2021-02-06', '2023-01-21', 5);
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-10-29', '2023-03-03', 1);
-insert into rental ( start_date, end_date, instrument_id) values ( '2022-02-07', null, 18);
-insert into rental ( start_date, end_date, instrument_id) values ( '2022-07-18', '2023-07-10', 10);
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-01-31', '2023-08-15', 17);
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-11-17', '2023-03-23', 10);
-insert into rental ( start_date, end_date, instrument_id) values ( '2021-07-30', null, 17);
 
 insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('78836316-2460', 'Teressa', 'Fidelus', '2017/10/28', '46157', 'Bulgan', '34933 Monterey Plaza');
 insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('65990487-5909', 'Curcio', 'Gounin', '2007/12/31', '58761', 'Carangola', '23 Rigney Place');
@@ -58,22 +43,22 @@ insert into student (person_number, first_name, last_name, enrollment_date, zip,
 insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('93788143-1267', 'Vergil', 'Straine', '2007/12/05', '44393', 'Dallas', '61 Warbler Plaza');
 insert into student (person_number, first_name, last_name, enrollment_date, zip, city, street_adress) values ('75315355-3543', 'Stanly', 'Collopy', '2018/01/04', '67035', 'Wangping', '56 Hudson Alley');
 
-insert into students_renting(rental_id,student_id) values(6,1);
-insert into students_renting(rental_id,student_id) values(15,1);
-insert into students_renting(rental_id,student_id) values(5,2);
-insert into students_renting(rental_id,student_id) values(4,3);
-insert into students_renting(rental_id,student_id) values(8,5);
-insert into students_renting(rental_id,student_id) values(1,6);
-insert into students_renting(rental_id,student_id) values(2,6);
-insert into students_renting(rental_id,student_id) values(14,7);
-insert into students_renting(rental_id,student_id) values(10,8);
-insert into students_renting(rental_id,student_id) values(4,8);
-insert into students_renting(rental_id,student_id) values(7,9);
-insert into students_renting(rental_id,student_id) values(3,10);
-insert into students_renting(rental_id,student_id) values(9,11);
-insert into students_renting(rental_id,student_id) values(11,12);
-insert into students_renting(rental_id,student_id) values(12,13);
-insert into students_renting(rental_id,student_id) values(13,14);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-04-02', '2023-04-26', 8, 6 );
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-11-11', '2023-02-07', 14,6 );
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2022-01-19', '2023-01-07', 3, 10);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-01-13', '2023-07-30', 6, 3);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-12-16', '2023-10-23', 6, 2);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2022-05-25', '2023-01-08', 18, 1);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2022-04-14', '2023-08-08', 8, 9);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-08-03', '2023-03-25', 20, 5);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ('2021-02-06', '2023-01-21', 5,11 );
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-10-29', '2023-03-03', 1, 8);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2022-02-07', null, 18,12 );
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2022-07-18', '2023-07-10', 10,13 );
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-01-31', '2023-08-15', 17, 14);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-11-17', '2023-03-23', 10, 7);
+insert into rental ( start_date, end_date, instrument_id,student_id) values ( '2021-07-30', null, 17, 1);
+
 
 
 insert into max_rental_per_student(max_rental,set_date) values(2,'1999-12-31');
