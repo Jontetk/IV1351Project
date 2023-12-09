@@ -11,16 +11,7 @@ CREATE TABLE instrument(
 	PRIMARY KEY(instrument_id)
 
 );
-CREATE TABLE rental(
-	rental_id INT GENERATED ALWAYS AS IDENTITY NOT NULL,
-	start_date DATE NOT NULL,
-	end_date DATE,
-	instrument_id INT,
-	PRIMARY KEY(rental_id),
-	FOREIGN KEY(instrument_id) REFERENCES instrument(instrument_id) ON DELETE SET NULL
-	
 
-);
 
 CREATE TABLE student(
     student_id INT GENERATED ALWAYS AS IDENTITY NOT NULL,
@@ -36,15 +27,19 @@ CREATE TABLE student(
 	
 
 );
-
-CREATE TABLE students_renting(
-	rental_id INT NOT NULL,
+CREATE TABLE rental(
+	rental_id INT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	start_date DATE NOT NULL,
+	end_date DATE,
+	instrument_id INT NOT NULL,
 	student_id INT NOT NULL,
-	UNIQUE(rental_id,student_id),
-	FOREIGN KEY(rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE,
+	PRIMARY KEY(rental_id),
+	FOREIGN KEY(instrument_id) REFERENCES instrument(instrument_id) ON DELETE CASCADE,
 	FOREIGN KEY(student_id) REFERENCES student(student_id) ON DELETE CASCADE
+	
 
 );
+
 
 CREATE TABLE max_rental_per_student(
 	max_rental_id INT GENERATED ALWAYS AS IDENTITY NOT NULL,
