@@ -4,21 +4,24 @@ import java.sql.Date;
 
 public class RentalDTO {
     
-    private int rentalId;
+    private Integer rentalId;
     private Date startDate;
     private Date endDate;    
     private int instrumentId;
+    private int studentId;
     
     
-    public RentalDTO(int rentalId, Date startDate, Date endDate, int instrumentId) {
+    public RentalDTO(Integer rentalId, Date startDate, Date endDate, int instrumentId, int StudentId) {
         this.rentalId = rentalId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.instrumentId = instrumentId;
+        this.studentId = studentId;
+        
     }
 
 
-    public int getRentalId() {
+    public Integer getRentalId() {
         return rentalId;
     }
 
@@ -36,6 +39,9 @@ public class RentalDTO {
     public int getInstrumentId() {
         return instrumentId;
     }
+    public int getStudentId() {
+        return studentId;
+    }
    
     
     @Override
@@ -50,6 +56,7 @@ public class RentalDTO {
 
         return stringRepresentation.toString();
     }
+
 
 
     

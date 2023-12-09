@@ -13,7 +13,7 @@ import se.kth.iv1351.sem4.integration.RentalDBException;
 import se.kth.iv1351.sem4.model.InstrumentDTO;
 import se.kth.iv1351.sem4.model.RentalDTO;
 import se.kth.iv1351.sem4.model.Student;
-import se.kth.iv1351.sem4.model.StudentsRentingDTO;
+
 
 
 
@@ -23,7 +23,7 @@ public class RentalDAO {
     private PreparedStatement findAllInstruments;
     private PreparedStatement findAllRentals;
     private PreparedStatement findStudentsByPNR;
-    private PreparedStatement findAllStudentsRenting;
+    private PreparedStatement findMaxRental;
     
     public static final String INSTRUMENT_ID = "instrument_id";
     public static final String BRAND = "brand";
@@ -35,6 +35,7 @@ public class RentalDAO {
     public static final String E_DATE = "end_date";
     public static final String STUD_ID = "student_id";
     public static final String PERSON_NR = "person_number";
+    public static final String MAX_RENTAL = "max_rental";
 
 
 
@@ -54,12 +55,13 @@ public class RentalDAO {
     private void prepareStatements() throws SQLException {
         findAllInstruments = connection.prepareStatement("SELECT "+INSTRUMENT_ID+", "+BRAND+", "+TYPE+", "+CODE+", "+RENT_FEE+" "
         +"FROM seminar.instrument;");
-        findAllRentals = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+ " "
+        findAllRentals = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+ " "
         +"FROM seminar.rental");
         findStudentsByPNR = connection.prepareStatement("SELECT "+STUD_ID+", "+PERSON_NR+" "
         +"FROM seminar.student WHERE "+ PERSON_NR +" = ?");
-        findAllStudentsRenting = connection.prepareStatement("SELECT "+RENT_ID+", "+STUD_ID+" "
-        +"FROM seminar.students_renting");
+        findMaxRental = connection.prepareStatement("SELECT "+MAX_RENTAL+" "
+        +"from seminar.max_rental_per_student ORDER BY set_date DESC LIMIT 1;");
+
     }
 
 
@@ -91,7 +93,11 @@ public class RentalDAO {
         return allInstruments;
 
     }
-    public ArrayList<RentalDTO> getAllRentals() throws RentalDBException{
+
+
+    // TODO LOCK this table when renting is happen so no one rets same instrument at same time
+    // TIP USE SHARELOCK as it blcoks ROW EXCLUSIVE lock which is needed for insert 
+    public ArrayList<RentalDTO> getAllRentals(boolean lock) throws RentalDBException{
         ArrayList<RentalDTO> allRentals = new ArrayList<RentalDTO>();
         
         try {
@@ -103,7 +109,8 @@ public class RentalDAO {
                             result.getInt(RENT_ID),
                             result.getDate(S_DATE),
                             result.getDate(E_DATE),
-                            result.getInt(INSTRUMENT_ID)
+                            result.getInt(INSTRUMENT_ID),
+                            result.getInt(STUD_ID)
                             ));}
                     connection.commit();
                 }
@@ -139,33 +146,28 @@ public class RentalDAO {
         
         return student;
     }
+    public int getMaxRentalNumber() throws RentalDBException{
 
-
-    // TODO REMOVE IF UNNCESESSARY 
-    public ArrayList<StudentsRentingDTO> getAllStudentsRenting() throws RentalDBException{
-        ArrayList<StudentsRentingDTO> allStudentRentals = new ArrayList<StudentsRentingDTO>();
-        
+        Integer maxRental = null;
         try {
-            ResultSet result = findAllStudentsRenting.executeQuery();
+            ResultSet result = findMaxRental.executeQuery();
             {
-                while (result.next()) {
-                        allRentals.add(
-                        new StudentsRentingDTO(
-                            result.getInt(RENT_ID),
-                            result.getInt(STUD_ID)
-     
-                            ));}
+                    if(result.next()){
+                        maxRental = result.getInt(MAX_RENTAL);
+                    }
                     connection.commit();
                 }
             }
             
-            catch (SQLException e) {
+          catch (SQLException e) {
             throw new RentalDBException("Error could not get data. Reason: ", e);
         }
         
-        return allStudentRentals;
-        
+        return maxRental;
+
     }
+
+
     
 
     private void connectToRentalDB() throws SQLException {

@@ -22,9 +22,10 @@ public class Controller {
 
   
 
-    public void rentInstrument(String personNumber, InstrumentDTO ins) throws RentalDBException{
+    public void rentInstrument(String personNumber, int insId) throws RentalDBException, Exception{
+
         Student currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
-        currentStudent.rentInstrument
+        currentStudent.rentInstrument(rentaldb.getAllRentals(), this.getAllAvalibleInstruments(), insId, rentaldb.getMaxRentalNumber());
         
     }
 
