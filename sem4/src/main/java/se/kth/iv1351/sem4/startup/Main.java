@@ -8,8 +8,13 @@ public class Main {
     public static void main(String[] args) throws Exception{
 
         RentalDAO renrenterenren = new RentalDAO();
-        ArrayList<InstrumentDTO> arararar = renrenterenren.findAvaInstruments();
-        for(InstrumentDTO instrumentsas:arararar) {
+        ArrayList<InstrumentDTO> rents = renrenterenren.getAllInstruments();
+        ArrayList<RentalDTO> instrus = renrenterenren.getAllRentals();
+        RentalInfo rentalHandler = new RentalInfo();
+       
+
+        
+        for(InstrumentDTO instrumentsas: rentalHandler.checkAvailibleInstrument(instrus, rents)) {
             System.out.println(instrumentsas.toString());
         }
         
