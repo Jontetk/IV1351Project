@@ -19,15 +19,15 @@ public class Student {
     
 
 
-    public void rentInstrument(ArrayList<RentalDTO> rentals, ArrayList<InstrumentDTO> availibleInstruments, int instrumentId,int maxRental)
-    throws Exception {
+    public RentalDTO rentInstrument(ArrayList<RentalDTO> rentals, ArrayList<InstrumentDTO> availibleInstruments, int instrumentId,int maxRental)
+    throws RentalException {
     
         if(! (isRentalAllowed(rentals,maxRental) && isSelectedInstrumentAvalible(availibleInstruments, instrumentId)))
         {
-            throw new Exception("Cannot rent. Instrument not avalible or above limit. "); 
+            throw new RentalException("Cannot rent. Instrument not avalible or above limit. "); 
         }
         
-        rentals.add(new RentalDTO(null,new java.sql.Date(new java.util.Date().getTime()), null, instrumentId, this.id));
+        return new RentalDTO(null,new java.sql.Date(new java.util.Date().getTime()), null, instrumentId, this.id);
         
         
 
@@ -41,11 +41,11 @@ public class Student {
         // rental count logic. May need to refactor into if rental valid function
         int totalRentals = 0;
         for(RentalDTO rental:rentals) {
-            if(rental.getStudentId() == this.id)
+            if(rental.getStudentId() == this.id && rental.getEndDate() != null)
                 totalRentals += 1;
         }
-        // check if total > limit and then returns bool
-        return totalRentals > rentalLimit;
+        // check if limit > total and then returns bool
+        return  rentalLimit > totalRentals;
     }
 
     private boolean isSelectedInstrumentAvalible(ArrayList<InstrumentDTO> availibleInstruments, int instrumentId){

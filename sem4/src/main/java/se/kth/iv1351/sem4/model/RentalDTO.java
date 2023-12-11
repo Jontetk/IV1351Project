@@ -11,7 +11,7 @@ public class RentalDTO {
     private int studentId;
     
     
-    public RentalDTO(Integer rentalId, Date startDate, Date endDate, int instrumentId, int StudentId) {
+    public RentalDTO(Integer rentalId, Date startDate, Date endDate, int instrumentId, int studentId) {
         this.rentalId = rentalId;
         this.startDate = startDate;
         this.endDate = endDate;

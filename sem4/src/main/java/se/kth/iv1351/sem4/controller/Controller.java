@@ -17,7 +17,7 @@ public class Controller {
 
 
     public ArrayList<InstrumentDTO> getAllAvalibleInstruments() throws RentalDBException{ 
-        return RentalInfo.checkAvailibleInstrument(rentaldb.getAllRentals(), rentaldb.getAllInstruments());
+        return RentalInfo.checkAvailibleInstrument(rentaldb.getAllRentals(false), rentaldb.getAllInstruments());
     }
 
   
@@ -25,8 +25,15 @@ public class Controller {
     public void rentInstrument(String personNumber, int insId) throws RentalDBException, Exception{
 
         Student currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
-        currentStudent.rentInstrument(rentaldb.getAllRentals(), this.getAllAvalibleInstruments(), insId, rentaldb.getMaxRentalNumber());
-        
+        try{
+        RentalDTO newRental = currentStudent.rentInstrument(rentaldb.getAllRentals(true), this.getAllAvalibleInstruments(), insId, rentaldb.getMaxRentalNumber());
+
+        rentaldb.insertNewRental(newRental);
+        }
+        catch(Exception e) {
+            rentaldb.rollbackOnError(e);
+        }
+
     }
 
 

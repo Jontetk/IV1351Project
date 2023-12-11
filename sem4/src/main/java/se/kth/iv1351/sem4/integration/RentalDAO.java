@@ -24,7 +24,9 @@ public class RentalDAO {
     private PreparedStatement findAllRentals;
     private PreparedStatement findStudentsByPNR;
     private PreparedStatement findMaxRental;
-    
+    private PreparedStatement lockRentalTable;
+    private PreparedStatement insertRental;
+
     public static final String INSTRUMENT_ID = "instrument_id";
     public static final String BRAND = "brand";
     public static final String TYPE = "instrument_type";
@@ -57,10 +59,13 @@ public class RentalDAO {
         +"FROM seminar.instrument;");
         findAllRentals = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+ " "
         +"FROM seminar.rental");
+        lockRentalTable = connection.prepareStatement("LOCK TABLE seminar.rental in SHARE ROW EXCLUSIVEs MODE;");
         findStudentsByPNR = connection.prepareStatement("SELECT "+STUD_ID+", "+PERSON_NR+" "
         +"FROM seminar.student WHERE "+ PERSON_NR +" = ?");
         findMaxRental = connection.prepareStatement("SELECT "+MAX_RENTAL+" "
         +"from seminar.max_rental_per_student ORDER BY set_date DESC LIMIT 1;");
+        insertRental =connection.prepareStatement("INSERT into seminar.rental ("+S_DATE+","+E_DATE+","+INSTRUMENT_ID+","+STUD_ID+") VALUES (?,?,?,?);");
+
 
     }
 
@@ -87,7 +92,7 @@ public class RentalDAO {
             }
             
           catch (SQLException e) {
-            throw new RentalDBException("Error could not get data. Reason: ", e);
+            handleException("Error could not get data. Reason: ", e);
         }
         
         return allInstruments;
@@ -99,9 +104,15 @@ public class RentalDAO {
     // TIP USE SHARELOCK as it blcoks ROW EXCLUSIVE lock which is needed for insert 
     public ArrayList<RentalDTO> getAllRentals(boolean lock) throws RentalDBException{
         ArrayList<RentalDTO> allRentals = new ArrayList<RentalDTO>();
-        
+            PreparedStatement statement = findAllRentals;
+          
+         
         try {
-            ResultSet result = findAllRentals.executeQuery();
+            if(lock){
+                lockRentalTable.execute();
+            }
+
+             ResultSet result = statement.executeQuery();
             {
                 while (result.next()) {
                         allRentals.add(
@@ -111,14 +122,17 @@ public class RentalDAO {
                             result.getDate(E_DATE),
                             result.getInt(INSTRUMENT_ID),
                             result.getInt(STUD_ID)
-                            ));}
-                    connection.commit();
+                            ));
+                        }
+                        if(!lock)
+                            connection.commit();
                 }
             }
             
-          catch (SQLException e) {
-            throw new RentalDBException("Error could not get data. Reason: ", e);
+        catch (SQLException e) {
+            handleException("Error could not get data. Reason: ", e);
         }
+        
         
         return allRentals;
         
@@ -141,12 +155,12 @@ public class RentalDAO {
             }
             
           catch (SQLException e) {
-            throw new RentalDBException("Error could not get data. Reason: ", e);
+            handleException("Error could not get data. Reason: ", e);
         }
         
         return student;
     }
-    public int getMaxRentalNumber() throws RentalDBException{
+    public Integer getMaxRentalNumber() throws RentalDBException{
 
         Integer maxRental = null;
         try {
@@ -160,11 +174,29 @@ public class RentalDAO {
             }
             
           catch (SQLException e) {
-            throw new RentalDBException("Error could not get data. Reason: ", e);
+            handleException("Error could not get data. Reason: ", e);
         }
         
         return maxRental;
 
+    }
+
+
+    public void insertNewRental(RentalDTO rental) throws RentalDBException{
+     
+        try {
+                insertRental.setDate(1,rental.getStartDate());
+                insertRental.setDate(2,rental.getEndDate());
+                insertRental.setInt(3,rental.getInstrumentId());
+                insertRental.setInt(4,rental.getStudentId());
+                insertRental.executeUpdate();
+                connection.commit();
+                
+            }
+            
+        catch (SQLException e) {
+            handleException("Error could not get data. Reason: ", e);
+        }
     }
 
 
@@ -175,21 +207,17 @@ public class RentalDAO {
                 "postgres", "post");
 
         connection.setAutoCommit(false);
+        
     }
 
     
 
-    // TODO CUSTOMIZE CODE HERE PERHAPS
-    private void closeResultSet(String failureMsg, ResultSet result) throws RentalDBException {
-        try {
-            result.close();
-        } catch (Exception e) {
-            throw new RentalDBException(failureMsg + " Could not close result set.", e);
-        }
+    public void rollbackOnError(Exception error) throws RentalDBException {
+            handleException("Transaction failed",error);
+        
     }
 
 
-    // TODO CUSTOMIZE CODE HERE PERHAPS
     private void handleException(String failureMsg, Exception cause) throws RentalDBException {
         String completeFailureMsg = failureMsg;
         try {
