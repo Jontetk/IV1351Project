@@ -11,29 +11,50 @@ public class Controller {
     private final String dbErrorStr = "Error in database";
     private Student currentStudent = null;
     
+
+
+    /**
+     * Controller for controlling the program
+     * 
+     * @throws RentalDBException if database could not connect
+     */
     public Controller() throws RentalDBException{
         rentaldb = new RentalDAO();
 
     }
 
+    /**
+     * Removes the selected {@link se.kth.iv1351.sem4.model.Student Student}
+     * 
+     */
     public void unSelectStudent() {
         this.currentStudent = null;
     }
     
-
+    /**
+     * Sets the current {@link se.kth.iv1351.sem4.model.Student Student}
+     * 
+     * @param personNumber The person number of the student to be selected
+     * @throws RentalException If there was a problem with the database
+     */
     public void selectStudent(String personNumber) throws RentalException{
         try{
-        this.currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
+            this.currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
         }
         catch(RentalDBException e){
             throw new RentalException(dbErrorStr);
         }
 
     }
-
+    /**
+     * Gets all instruments that are currently not rented
+     * 
+     * @return An {@link java.util.ArrayList ArrayList} containing all instruments that are availible
+     * @throws RentalException If there was an error with the database
+     */
     public ArrayList<InstrumentDTO> getAllAvalibleInstruments() throws RentalException{ 
         try{
-        return RentalInfo.checkAvailibleInstrument(rentaldb.getAllRentals(false), rentaldb.getAllInstruments());
+            return RentalInfo.checkAvailibleInstrument(rentaldb.getAllRentals(false), rentaldb.getAllInstruments());
         }
         catch(RentalDBException e) {
             throw new RentalException(dbErrorStr);
@@ -42,17 +63,22 @@ public class Controller {
 
   
 
-
-    public void rentInstrument(int insId) throws RentalException, RentalDBException{
+    /**
+     * Rents an instrument as the currentStudent
+     * 
+     * @param insId The id of the instrument to rent
+     * @throws RentalException If there was error with database or error when renting
+     * 
+     */
+    public void rentInstrument(int insId) throws RentalException{
 
         if(currentStudent == null) {
             throw new RentalException("No student set");
         }
         try{
         
-        RentalDTO newRental = currentStudent.rentInstrument(rentaldb.getAllRentals(true), this.getAllAvalibleInstruments(), insId, rentaldb.getMaxRentalNumber());
-
-        rentaldb.insertNewRental(newRental);
+            RentalDTO newRental = currentStudent.rentInstrument(rentaldb.getAllRentals(true), this.getAllAvalibleInstruments(), insId, rentaldb.getMaxRentalNumber());
+            rentaldb.insertNewRental(newRental);
         }
         catch(RentalDBException e) {
             throw new RentalException(dbErrorStr);
@@ -69,20 +95,32 @@ public class Controller {
         
 
     }
+
+    /**
+     * gets all the rentals of the currentStudent
+     * 
+     * @return An {@link java.util.ArrayList ArrayList} containing the rentals of the student
+     * @throws RentalException If database error or no student has been set
+     */
     public ArrayList<RentalDTO> getAllRentalsFromStudent() throws RentalException{
         if(currentStudent == null) {
             throw new RentalException("No student set");
         }
         try {
             
-            return rentaldb.getStudentRentals(currentStudent.getId());
+            return rentaldb.getStudentRentals(currentStudent.getId(),false);
         }
         catch (RentalDBException e) {
             throw new RentalException(dbErrorStr);
         }
 
     }
-
+    /**
+     * Terminates a selected rental from the currentStudent
+     * 
+     * @param rentalId The id of the rental
+     * @throws RentalException If there was a problem with the database or the termination logic
+     */
     public void terminateRental(int rentalId) throws RentalException{
         if(currentStudent == null) {
             throw new RentalException("No student set");
@@ -90,9 +128,7 @@ public class Controller {
 
         try {
            
-            ArrayList<RentalDTO> studRentals = rentaldb.getStudentRentals(currentStudent.getId());
-        
-
+            ArrayList<RentalDTO> studRentals = rentaldb.getStudentRentals(currentStudent.getId(),true);
             if (currentStudent.rentalCanBeTerminated(studRentals,rentalId))
                 rentaldb.removeRental(rentalId);
             else {
@@ -102,8 +138,15 @@ public class Controller {
         catch(RentalDBException e) {
             throw new RentalException(dbErrorStr);
         }
+        catch(RentalException err) {
+            try{
+                rentaldb.rollbackOnError(err);
+            }
+            catch(RentalDBException dbe){
+                throw new RentalException(err.getMessage());
+            } 
+        }
         
-
     }
 
 

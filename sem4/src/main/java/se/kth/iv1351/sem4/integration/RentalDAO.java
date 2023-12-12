@@ -29,6 +29,7 @@ public class RentalDAO {
     private PreparedStatement insertRental;
     private PreparedStatement findStudentRentalsLocking;
     private PreparedStatement setRentalEndDate;
+    private PreparedStatement findStudentRentals;
     
 
     public static final String INSTRUMENT_ID = "instrument_id";
@@ -48,7 +49,10 @@ public class RentalDAO {
 
 
 
-    
+    /**
+     * The rentalDAO for handling database connection
+     * @throws RentalDBException If the database could not connect
+     */
     public RentalDAO() throws RentalDBException {
         try {
             connectToRentalDB();
@@ -58,24 +62,34 @@ public class RentalDAO {
         }
     }
 
+    /**
+     * Statements that are used
+     * @throws SQLException If there was an error with getting the data
+     */
     private void prepareStatements() throws SQLException {
         findAllInstruments = connection.prepareStatement("SELECT "+INSTRUMENT_ID+", "+BRAND+", "+TYPE+", "+CODE+", "+RENT_FEE+" "
         +"FROM seminar.instrument;");
         findAllRentals = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+ " "
-        +"FROM seminar.rental");
+        +"FROM seminar.rental;");
         lockRentalTable = connection.prepareStatement("LOCK TABLE seminar.rental in SHARE ROW EXCLUSIVE MODE;");
         findStudentsByPNR = connection.prepareStatement("SELECT "+STUD_ID+", "+PERSON_NR+" "
-        +"FROM seminar.student WHERE "+ PERSON_NR +" = ?");
+        +"FROM seminar.student WHERE "+ PERSON_NR +" = ?;" );
         findMaxRental = connection.prepareStatement("SELECT "+MAX_RENTAL+" "
         +"from seminar.max_rental_per_student ORDER BY set_date DESC LIMIT 1;");
         insertRental =connection.prepareStatement("INSERT into seminar.rental ("+S_DATE+","+E_DATE+","+INSTRUMENT_ID+","+STUD_ID+") VALUES (?,?,?,?);");
-        findStudentRentalsLocking = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+" FROM seminar.rental WHERE "+STUD_ID+" = ? FOR NO KEY UPDATE");
+        findStudentRentalsLocking = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+" FROM seminar.rental WHERE "+STUD_ID+" = ? FOR NO KEY UPDATE;");
+        findStudentRentals = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+" FROM seminar.rental WHERE "+STUD_ID+" = ?;");
         setRentalEndDate = connection.prepareStatement("UPDATE seminar.rental SET "+E_DATE+" = ? WHERE "+RENT_ID+" = ?;");
         
 
     }
 
-    
+    /**
+     * Removes a selected rental by setting its end date to the current date
+     * 
+     * @param rentalId The id of the rental to be removed
+     * @throws RentalDBException If there was a problem in the database
+     */
     public void removeRental(int rentalId) throws RentalDBException{
         try {
 
@@ -91,13 +105,24 @@ public class RentalDAO {
 
 
     /**
-     * locks rows when run
+     * Gets all rentals for a specific student
+     * 
+     * @param id The id of the {@link se.kth.iv1351.sem4.model.Student Student} that has the rentals
+     * @param lock If the row should get locked
+     * @return An {@link java.util.ArrayList ArrayList} containing all rentals of the student
+     * @throws RentalDBException If there was a problem with getting the data
      */
-    public ArrayList<RentalDTO> getStudentRentals(int id)  throws RentalDBException{
+    public ArrayList<RentalDTO> getStudentRentals(int id,boolean lock)  throws RentalDBException{
         ArrayList<RentalDTO> studentRentals = new ArrayList<>();
         try {
-            findStudentRentalsLocking.setInt(1, id);
-            ResultSet result = findStudentRentalsLocking .executeQuery();
+            PreparedStatement statement;
+            if(lock) 
+                statement = findStudentRentalsLocking;
+            else
+                statement = findStudentRentals;
+
+            statement.setInt(1, id);
+            ResultSet result = statement .executeQuery();
              while (result.next()) {
                         studentRentals.add(
                         new RentalDTO(
@@ -118,13 +143,17 @@ public class RentalDAO {
     }
 
     
-    // do we handle when the list is empty
+    /**
+     * Gets all instruments
+     * @return An {@link java.util.ArrayList ArrayList} containing all instruments
+     * @throws RentalDBException If there was a problem with getting the data
+     */
     public ArrayList<InstrumentDTO> getAllInstruments() throws RentalDBException{
         ArrayList<InstrumentDTO> allInstruments = new ArrayList<InstrumentDTO>();
         
         try {
             ResultSet result = findAllInstruments.executeQuery();
-            {
+            
                 while (result.next()) {
                         allInstruments.add(
                         new InstrumentDTO(
@@ -136,7 +165,7 @@ public class RentalDAO {
                             ));}
                     connection.commit();
                 }
-            }
+            
             
           catch (SQLException e) {
             handleException("Error could not get data. Reason: ", e);
@@ -147,8 +176,13 @@ public class RentalDAO {
     }
 
 
-    // TODO LOCK this table when renting is happen so no one rets same instrument at same time
-    // TIP USE SHARELOCK as it blcoks ROW EXCLUSIVE lock which is needed for insert 
+    /**
+     * Gets all the rentals
+     * 
+     * @param lock If the table should get locked
+     * @return An {@link java.util.ArrayList ArrayList} containing all rentals
+     * @throws RentalDBException If there was a problem with getting the data
+     */
     public ArrayList<RentalDTO> getAllRentals(boolean lock) throws RentalDBException{
         ArrayList<RentalDTO> allRentals = new ArrayList<RentalDTO>();
             PreparedStatement statement = findAllRentals;
@@ -160,7 +194,7 @@ public class RentalDAO {
             }
 
              ResultSet result = statement.executeQuery();
-            {
+            
                 while (result.next()) {
                         allRentals.add(
                         new RentalDTO(
@@ -173,7 +207,7 @@ public class RentalDAO {
                         }
                         if(!lock)
                             connection.commit();
-                }
+                
             }
             
         catch (SQLException e) {
@@ -185,20 +219,26 @@ public class RentalDAO {
         
     }
 
-
+    /**
+     * Gets the student that has a specified person number
+     * 
+     * @param personNumber the specified person number
+     * @return A {@link se.kth.iv1351.sem4.model.Student Student} that has the person number 
+     * @throws RentalDBException If there was a problem with getting the data
+     */
     public Student getStudentByPeronNumber(String personNumber) throws RentalDBException{
         Student student = null;
         try {
             findStudentsByPNR.setString(1,personNumber);
             ResultSet result = findStudentsByPNR.executeQuery();
-            {
-                    if(result.next()){
-                        student = new Student(
-                        result.getInt(STUD_ID),
-                        result.getString(PERSON_NR));
-                    }
-                    connection.commit();
+            
+                if(result.next()){
+                    student = new Student(
+                    result.getInt(STUD_ID),
+                    result.getString(PERSON_NR));
                 }
+                connection.commit();
+            
             }
             
           catch (SQLException e) {
@@ -207,17 +247,26 @@ public class RentalDAO {
         
         return student;
     }
+
+
+    /**
+     * Returns the max number of rentals that a student can have
+     * 
+     * @return the max amount of rentals
+     * @throws RentalDBException If there was a problem with getting the data
+     */
+
     public Integer getMaxRentalNumber() throws RentalDBException{
 
         Integer maxRental = null;
         try {
             ResultSet result = findMaxRental.executeQuery();
-            {
-                    if(result.next()){
-                        maxRental = result.getInt(MAX_RENTAL);
-                    }
-                    connection.commit();
+            
+                if(result.next()){
+                    maxRental = result.getInt(MAX_RENTAL);
                 }
+                connection.commit();
+            
             }
             
           catch (SQLException e) {
@@ -228,7 +277,12 @@ public class RentalDAO {
 
     }
 
-
+    /**
+     * Inserts a new rental into the database
+     * 
+     * @param rental The {@link se.kth.iv1351.sem4.model.RentalDTO RentalDTO} to be inserted into the database
+     * @throws RentalDBException If there was a problem with getting the data
+     */
     public void insertNewRental(RentalDTO rental) throws RentalDBException{
      
         try {
@@ -248,7 +302,10 @@ public class RentalDAO {
 
 
     
-
+    /** Connects to the database
+     * 
+     * @throws SQLException if there was an error connecting
+     */
     private void connectToRentalDB() throws SQLException {
         connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sem",
                 "postgres", "post");
@@ -258,13 +315,24 @@ public class RentalDAO {
     }
 
     
-
+    /**
+     * Calls handle exception with the error
+     * 
+     * @param error the error
+     * @throws RentalDBException The exception thrown by handle exception
+     */
     public void rollbackOnError(Exception error) throws RentalDBException {
             handleException("Transaction failed",error);
         
     }
 
-
+    /**
+     * Handles any exception by rolling back the database to before the current transaction
+     * 
+     * @param failureMsg The failure message 
+     * @param cause The cause of the exception
+     * @throws RentalDBException A rentalDBException created from the message and the cause
+     */
     private void handleException(String failureMsg, Exception cause) throws RentalDBException {
         String completeFailureMsg = failureMsg;
         try {
