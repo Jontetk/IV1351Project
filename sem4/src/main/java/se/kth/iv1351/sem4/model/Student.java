@@ -1,6 +1,6 @@
 package se.kth.iv1351.sem4.model;
 
-import se.kth.iv1351.sem4.integration.RentalDBException;
+
 
 import java.sql.*;
 import java.util.*;
@@ -16,8 +16,23 @@ public class Student {
         this.personNumber = personNumber;
     }
 
-    
+    public int getId() {
+        return id;
+    }
 
+    public String getPersonNumber() {
+        return personNumber;
+    }
+
+
+    public boolean rentalCanBeTerminated(ArrayList<RentalDTO> rentals, int rentalId) {
+        for(RentalDTO rental : rentals) {
+            if(rentalId == rental.getRentalId() && rental.getEndDate() == null)
+                return true;
+        }
+        return false;
+
+    }
 
     public RentalDTO rentInstrument(ArrayList<RentalDTO> rentals, ArrayList<InstrumentDTO> availibleInstruments, int instrumentId,int maxRental)
     throws RentalException {

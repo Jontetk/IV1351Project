@@ -9,6 +9,7 @@ import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 
 
+
 import se.kth.iv1351.sem4.integration.RentalDBException;
 import se.kth.iv1351.sem4.model.InstrumentDTO;
 import se.kth.iv1351.sem4.model.RentalDTO;
@@ -26,6 +27,9 @@ public class RentalDAO {
     private PreparedStatement findMaxRental;
     private PreparedStatement lockRentalTable;
     private PreparedStatement insertRental;
+    private PreparedStatement findStudentRentalsLocking;
+    private PreparedStatement setRentalEndDate;
+    
 
     public static final String INSTRUMENT_ID = "instrument_id";
     public static final String BRAND = "brand";
@@ -59,19 +63,62 @@ public class RentalDAO {
         +"FROM seminar.instrument;");
         findAllRentals = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+ " "
         +"FROM seminar.rental");
-        lockRentalTable = connection.prepareStatement("LOCK TABLE seminar.rental in SHARE ROW EXCLUSIVEs MODE;");
+        lockRentalTable = connection.prepareStatement("LOCK TABLE seminar.rental in SHARE ROW EXCLUSIVE MODE;");
         findStudentsByPNR = connection.prepareStatement("SELECT "+STUD_ID+", "+PERSON_NR+" "
         +"FROM seminar.student WHERE "+ PERSON_NR +" = ?");
         findMaxRental = connection.prepareStatement("SELECT "+MAX_RENTAL+" "
         +"from seminar.max_rental_per_student ORDER BY set_date DESC LIMIT 1;");
         insertRental =connection.prepareStatement("INSERT into seminar.rental ("+S_DATE+","+E_DATE+","+INSTRUMENT_ID+","+STUD_ID+") VALUES (?,?,?,?);");
-
+        findStudentRentalsLocking = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+" FROM seminar.rental WHERE "+STUD_ID+" = ? FOR NO KEY UPDATE");
+        setRentalEndDate = connection.prepareStatement("UPDATE seminar.rental SET "+E_DATE+" = ? WHERE "+RENT_ID+" = ?;");
+        
 
     }
 
+    
+    public void removeRental(int rentalId) throws RentalDBException{
+        try {
+
+            setRentalEndDate.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
+            setRentalEndDate.setInt(2, rentalId);
+            setRentalEndDate.executeUpdate();
+            connection.commit();
+        }
+        catch (SQLException e) {
+            handleException("Error could not set data. Reason: ", e);
+        }
+    } 
 
 
+    /**
+     * locks rows when run
+     */
+    public ArrayList<RentalDTO> getStudentRentals(int id)  throws RentalDBException{
+        ArrayList<RentalDTO> studentRentals = new ArrayList<>();
+        try {
+            findStudentRentalsLocking.setInt(1, id);
+            ResultSet result = findStudentRentalsLocking .executeQuery();
+             while (result.next()) {
+                        studentRentals.add(
+                        new RentalDTO(
+                            result.getInt(RENT_ID),
+                            result.getDate(S_DATE),
+                            result.getDate(E_DATE),
+                            result.getInt(INSTRUMENT_ID),
+                            result.getInt(STUD_ID)
+                            ));
+                        }
+                    connection.commit();
 
+        } catch (SQLException e) {
+           handleException("Error could not get data. Reason: ", e);
+        }
+       
+        return studentRentals;
+    }
+
+    
+    // do we handle when the list is empty
     public ArrayList<InstrumentDTO> getAllInstruments() throws RentalDBException{
         ArrayList<InstrumentDTO> allInstruments = new ArrayList<InstrumentDTO>();
         
@@ -195,7 +242,7 @@ public class RentalDAO {
             }
             
         catch (SQLException e) {
-            handleException("Error could not get data. Reason: ", e);
+            handleException("Error could not set data. Reason: ", e);
         }
     }
 

@@ -9,14 +9,15 @@ public class Main {
     public static void main(String[] args) throws Exception{
         Controller cont = new Controller();
 
-       
-        cont.rentInstrument("65990487-5909",11);
-        ArrayList<InstrumentDTO> instrus = cont.getAllAvalibleInstruments();
+       ArrayList<RentalDTO> studRents = cont.getAllRentalsFromStudent("13666424-8416");
+        for(RentalDTO reee : studRents) {
+            System.out.println(reee.toString());
+        }
+        cont.terminateRental("13666424-8416", 11);
 
-
-
-        for(InstrumentDTO instrumentsas: instrus) {
-            System.out.println(instrumentsas.toString());
+        studRents = cont.getAllRentalsFromStudent("13666424-8416");
+        for(RentalDTO reee : studRents) {
+            System.out.println(reee.toString());
         }
         
         
