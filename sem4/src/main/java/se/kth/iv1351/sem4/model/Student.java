@@ -33,7 +33,7 @@ public class Student {
         return false;
 
     }
-
+    
     public RentalDTO rentInstrument(ArrayList<RentalDTO> rentals, ArrayList<InstrumentDTO> availibleInstruments, int instrumentId,int maxRental)
     throws RentalException {
     
@@ -56,7 +56,7 @@ public class Student {
         // rental count logic. May need to refactor into if rental valid function
         int totalRentals = 0;
         for(RentalDTO rental:rentals) {
-            if(rental.getStudentId() == this.id && rental.getEndDate() != null)
+            if(rental.getStudentId() == this.id && rental.getEndDate() == null)
                 totalRentals += 1;
         }
         // check if limit > total and then returns bool

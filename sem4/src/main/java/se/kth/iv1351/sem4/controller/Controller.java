@@ -9,12 +9,27 @@ import java.util.ArrayList;
 public class Controller {
     private final RentalDAO rentaldb;
     private final String dbErrorStr = "Error in database";
+    private Student currentStudent = null;
     
     public Controller() throws RentalDBException{
         rentaldb = new RentalDAO();
 
     }
 
+    public void unSelectStudent() {
+        this.currentStudent = null;
+    }
+    
+
+    public void selectStudent(String personNumber) throws RentalException{
+        try{
+        this.currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
+        }
+        catch(RentalDBException e){
+            throw new RentalException(dbErrorStr);
+        }
+
+    }
 
     public ArrayList<InstrumentDTO> getAllAvalibleInstruments() throws RentalException{ 
         try{
@@ -27,11 +42,14 @@ public class Controller {
 
   
 
-    public void rentInstrument(String personNumber, int insId) throws RentalException{
 
-        
+    public void rentInstrument(int insId) throws RentalException, RentalDBException{
+
+        if(currentStudent == null) {
+            throw new RentalException("No student set");
+        }
         try{
-        Student currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
+        
         RentalDTO newRental = currentStudent.rentInstrument(rentaldb.getAllRentals(true), this.getAllAvalibleInstruments(), insId, rentaldb.getMaxRentalNumber());
 
         rentaldb.insertNewRental(newRental);
@@ -40,20 +58,23 @@ public class Controller {
             throw new RentalException(dbErrorStr);
         }        
 
-        catch(RentalException e) {
+        catch(RentalException err) {
             try{
-            rentaldb.rollbackOnError(e);
-            throw new RentalException(e.getMessage());
+                rentaldb.rollbackOnError(err);
             }
-            catch(RentalDBException dbe) {
-                throw new RentalException(dbErrorStr);
+            catch(RentalDBException dbe){
+                throw new RentalException(err.getMessage());
             }
         }
+        
 
     }
-    public ArrayList<RentalDTO> getAllRentalsFromStudent(String personNumber) throws RentalException{
+    public ArrayList<RentalDTO> getAllRentalsFromStudent() throws RentalException{
+        if(currentStudent == null) {
+            throw new RentalException("No student set");
+        }
         try {
-            Student currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
+            
             return rentaldb.getStudentRentals(currentStudent.getId());
         }
         catch (RentalDBException e) {
@@ -62,10 +83,13 @@ public class Controller {
 
     }
 
-    public void terminateRental(String personNumber, int rentalId) throws RentalException{
+    public void terminateRental(int rentalId) throws RentalException{
+        if(currentStudent == null) {
+            throw new RentalException("No student set");
+        }
 
         try {
-            Student currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
+           
             ArrayList<RentalDTO> studRentals = rentaldb.getStudentRentals(currentStudent.getId());
         
 
