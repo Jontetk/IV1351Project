@@ -7,6 +7,21 @@ public class InstrumentDTO {
     private String code;
     private float rentalFee;
    
+    /**
+     * an object representing an instrument 
+     * @param instrumentId 
+     * @param brand
+     * @param type the type of the instrument. For example: guitar, piano, violin etc...
+     * @param code unique code given to the instrument
+     * @param rentalFee fee (paid per month) to rent the instrument
+     */
+    public InstrumentDTO(int instrumentId, String brand, String type, String code, float rentalFee) {
+        this.instrumentId = instrumentId;
+        this.brand = brand;
+        this.type = type;
+        this.code = code;
+        this.rentalFee = rentalFee;
+    }
 
     public int getInstrumentId() {
         return instrumentId;
@@ -23,13 +38,8 @@ public class InstrumentDTO {
     public float getRentalFee() {
         return rentalFee;
     }
-    public InstrumentDTO(int instrumentId, String brand, String type, String code, float rentalFee) {
-        this.instrumentId = instrumentId;
-        this.brand = brand;
-        this.type = type;
-        this.code = code;
-        this.rentalFee = rentalFee;
-    }
+
+    
     
     @Override
     public String toString(){

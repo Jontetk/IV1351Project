@@ -10,7 +10,14 @@ public class RentalDTO {
     private int instrumentId;
     private int studentId;
     
-    
+    /**
+     * An object representing a rental object
+     * @param rentalId id of the rental
+     * @param startDate date of when rental starts.
+     * @param endDate End date of the rental. Set when the rental is terminated. This field is Null on ongoing rentals.  
+     * @param instrumentId id of the instrument being rented
+     * @param studentId id of the student that is participating in the rental
+     */
     public RentalDTO(Integer rentalId, Date startDate, Date endDate, int instrumentId, int studentId) {
         this.rentalId = rentalId;
         this.startDate = startDate;
@@ -20,21 +27,17 @@ public class RentalDTO {
         
     }
 
-
     public Integer getRentalId() {
         return rentalId;
     }
-
 
     public Date getStartDate() {
         return startDate;
     }
 
-
     public Date getEndDate() {
         return endDate;
     }
-
 
     public int getInstrumentId() {
         return instrumentId;
