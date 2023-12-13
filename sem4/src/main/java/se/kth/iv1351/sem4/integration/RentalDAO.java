@@ -90,7 +90,7 @@ public class RentalDAO {
      * @param rentalId The id of the rental to be removed
      * @throws RentalDBException If there was a problem in the database
      */
-    public void removeRental(int rentalId) throws RentalDBException{
+    public void deleteRental(int rentalId) throws RentalDBException{
         try {
 
             setRentalEndDate.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
@@ -112,7 +112,7 @@ public class RentalDAO {
      * @return An {@link java.util.ArrayList ArrayList} containing all rentals of the student
      * @throws RentalDBException If there was a problem with getting the data
      */
-    public ArrayList<RentalDTO> getStudentRentals(int id,boolean lock)  throws RentalDBException{
+    public ArrayList<RentalDTO> readStudentRentals(int id,boolean lock)  throws RentalDBException{
         ArrayList<RentalDTO> studentRentals = new ArrayList<>();
         try {
             PreparedStatement statement;
@@ -148,7 +148,7 @@ public class RentalDAO {
      * @return An {@link java.util.ArrayList ArrayList} containing all instruments
      * @throws RentalDBException If there was a problem with getting the data
      */
-    public ArrayList<InstrumentDTO> getAllInstruments() throws RentalDBException{
+    public ArrayList<InstrumentDTO> readAllInstruments() throws RentalDBException{
         ArrayList<InstrumentDTO> allInstruments = new ArrayList<InstrumentDTO>();
         
         try {
@@ -183,7 +183,7 @@ public class RentalDAO {
      * @return An {@link java.util.ArrayList ArrayList} containing all rentals
      * @throws RentalDBException If there was a problem with getting the data
      */
-    public ArrayList<RentalDTO> getAllRentals(boolean lock) throws RentalDBException{
+    public ArrayList<RentalDTO> readAllRentals(boolean lock) throws RentalDBException{
         ArrayList<RentalDTO> allRentals = new ArrayList<RentalDTO>();
             PreparedStatement statement = findAllRentals;
           
@@ -226,7 +226,7 @@ public class RentalDAO {
      * @return A {@link se.kth.iv1351.sem4.model.Student Student} that has the person number 
      * @throws RentalDBException If there was a problem with getting the data
      */
-    public Student getStudentByPeronNumber(String personNumber) throws RentalDBException{
+    public Student readStudentByPeronNumber(String personNumber) throws RentalDBException{
         Student student = null;
         try {
             findStudentsByPNR.setString(1,personNumber);
@@ -256,7 +256,7 @@ public class RentalDAO {
      * @throws RentalDBException If there was a problem with getting the data
      */
 
-    public Integer getMaxRentalNumber() throws RentalDBException{
+    public Integer readMaxRentalNumber() throws RentalDBException{
 
         Integer maxRental = null;
         try {
@@ -283,7 +283,7 @@ public class RentalDAO {
      * @param rental The {@link se.kth.iv1351.sem4.model.RentalDTO RentalDTO} to be inserted into the database
      * @throws RentalDBException If there was a problem with getting the data
      */
-    public void insertNewRental(RentalDTO rental) throws RentalDBException{
+    public void createNewRental(RentalDTO rental) throws RentalDBException{
      
         try {
                 insertRental.setDate(1,rental.getStartDate());

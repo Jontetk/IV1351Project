@@ -39,7 +39,7 @@ public class Controller {
      */
     public void selectStudent(String personNumber) throws RentalException{
         try{
-            this.currentStudent = rentaldb.getStudentByPeronNumber(personNumber);
+            this.currentStudent = rentaldb.readStudentByPeronNumber(personNumber);
         }
         catch(RentalDBException e){
             throw new RentalException(dbErrorStr);
@@ -54,7 +54,7 @@ public class Controller {
      */
     public ArrayList<InstrumentDTO> getAllAvalibleInstruments() throws RentalException{ 
         try{
-            return RentalInfo.checkAvailibleInstrument(rentaldb.getAllRentals(false), rentaldb.getAllInstruments());
+            return RentalInfo.checkAvailibleInstrument(rentaldb.readAllRentals(false), rentaldb.readAllInstruments());
         }
         catch(RentalDBException e) {
             throw new RentalException(dbErrorStr);
@@ -77,8 +77,8 @@ public class Controller {
         }
         try{
         
-            RentalDTO newRental = currentStudent.rentInstrument(rentaldb.getAllRentals(true), this.getAllAvalibleInstruments(), insId, rentaldb.getMaxRentalNumber());
-            rentaldb.insertNewRental(newRental);
+            RentalDTO newRental = currentStudent.rentInstrument(rentaldb.readAllRentals(true), this.getAllAvalibleInstruments(), insId, rentaldb.readMaxRentalNumber());
+            rentaldb.createNewRental(newRental);
         }
         catch(RentalDBException e) {
             throw new RentalException(dbErrorStr);
@@ -108,7 +108,7 @@ public class Controller {
         }
         try {
             
-            return rentaldb.getStudentRentals(currentStudent.getId(),false);
+            return rentaldb.readStudentRentals(currentStudent.getId(),false);
         }
         catch (RentalDBException e) {
             throw new RentalException(dbErrorStr);
@@ -128,9 +128,9 @@ public class Controller {
 
         try {
            
-            ArrayList<RentalDTO> studRentals = rentaldb.getStudentRentals(currentStudent.getId(),true);
+            ArrayList<RentalDTO> studRentals = rentaldb.readStudentRentals(currentStudent.getId(),true);
             if (currentStudent.rentalCanBeTerminated(studRentals,rentalId))
-                rentaldb.removeRental(rentalId);
+                rentaldb.deleteRental(rentalId);
             else {
                 throw new RentalException("Student does not have that rental");
             }
