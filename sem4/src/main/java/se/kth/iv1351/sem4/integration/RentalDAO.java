@@ -30,7 +30,7 @@ public class RentalDAO {
     private PreparedStatement findStudentRentalsLocking;
     private PreparedStatement setRentalEndDate;
     private PreparedStatement findStudentRentals;
-    
+    private PreparedStatement findAllInstrumentsLocking;
 
     public static final String INSTRUMENT_ID = "instrument_id";
     public static final String BRAND = "brand";
@@ -43,7 +43,7 @@ public class RentalDAO {
     public static final String STUD_ID = "student_id";
     public static final String PERSON_NR = "person_number";
     public static final String MAX_RENTAL = "max_rental";
-
+    
 
 
 
@@ -69,6 +69,11 @@ public class RentalDAO {
     private void prepareStatements() throws SQLException {
         findAllInstruments = connection.prepareStatement("SELECT "+INSTRUMENT_ID+", "+BRAND+", "+TYPE+", "+CODE+", "+RENT_FEE+" "
         +"FROM seminar.instrument;");
+
+        findAllInstrumentsLocking = connection.prepareStatement("SELECT "+INSTRUMENT_ID+", "+BRAND+", "+TYPE+", "+CODE+", "+RENT_FEE+" "
+        +"FROM seminar.instrument FOR UPDATE;");
+
+
         findAllRentals = connection.prepareStatement("SELECT "+RENT_ID+", "+S_DATE+", "+E_DATE+", "+INSTRUMENT_ID+", "+STUD_ID+ " "
         +"FROM seminar.rental;");
         lockRentalTable = connection.prepareStatement("LOCK TABLE seminar.rental in SHARE ROW EXCLUSIVE MODE;");
@@ -148,11 +153,16 @@ public class RentalDAO {
      * @return An {@link java.util.ArrayList ArrayList} containing all instruments
      * @throws RentalDBException If there was a problem with getting the data
      */
-    public ArrayList<InstrumentDTO> readAllInstruments() throws RentalDBException{
+    public ArrayList<InstrumentDTO> readAllInstruments(boolean lock) throws RentalDBException{
         ArrayList<InstrumentDTO> allInstruments = new ArrayList<InstrumentDTO>();
-        
+        PreparedStatement statement;
+        if(lock)
+            statement = findAllInstrumentsLocking;
+        else
+            statement = findAllInstruments;
+             
         try {
-            ResultSet result = findAllInstruments.executeQuery();
+            ResultSet result = statement.executeQuery();
             
                 while (result.next()) {
                         allInstruments.add(
@@ -163,7 +173,8 @@ public class RentalDAO {
                             result.getString(CODE),
                             result.getFloat(RENT_FEE)
                             ));}
-                    connection.commit();
+                    if(!lock)
+                        connection.commit();
                 }
             
             

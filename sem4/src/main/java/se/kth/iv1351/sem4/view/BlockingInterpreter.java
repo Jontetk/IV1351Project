@@ -84,7 +84,7 @@ public class BlockingInterpreter {
 
                         
                     case INSTRUMENTS:
-                        for(InstrumentDTO instrument :ctrl.getAllAvalibleInstruments()){
+                        for(InstrumentDTO instrument :ctrl.getAllAvalibleInstruments(false)){
                             System.out.println(instrument);
                         }
                         break;

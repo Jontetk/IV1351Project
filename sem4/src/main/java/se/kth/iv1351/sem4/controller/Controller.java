@@ -52,9 +52,9 @@ public class Controller {
      * @return An {@link java.util.ArrayList ArrayList} containing all instruments that are availible
      * @throws RentalException If there was an error with the database
      */
-    public ArrayList<InstrumentDTO> getAllAvalibleInstruments() throws RentalException{ 
+    public ArrayList<InstrumentDTO> getAllAvalibleInstruments(boolean lock) throws RentalException{ 
         try{
-            return RentalInfo.checkAvailibleInstrument(rentaldb.readAllRentals(false), rentaldb.readAllInstruments());
+            return RentalInfo.checkAvailibleInstrument(rentaldb.readAllRentals(false), rentaldb.readAllInstruments(lock));
         }
         catch(RentalDBException e) {
             throw new RentalException(dbErrorStr);
@@ -77,7 +77,7 @@ public class Controller {
         }
         try{
         
-            RentalDTO newRental = currentStudent.rentInstrument(rentaldb.readAllRentals(true), this.getAllAvalibleInstruments(), insId, rentaldb.readMaxRentalNumber());
+            RentalDTO newRental = currentStudent.rentInstrument(rentaldb.readAllRentals(true), this.getAllAvalibleInstruments(true), insId, rentaldb.readMaxRentalNumber());
             rentaldb.createNewRental(newRental);
         }
         catch(RentalDBException e) {
